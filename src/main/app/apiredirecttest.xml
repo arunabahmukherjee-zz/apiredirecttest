@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
+    <apikit:config name="Router" raml="apitest.raml" consoleEnabled="true" consolePath="console" keepRamlBaseUri="false" doc:name="Router">
+        <apikit:flow-mapping resource="/accounts" action="get" flow-ref="accountflow"/>
+        <apikit:flow-mapping resource="/contacts" action="get" flow-ref="contactflow"/>
+    </apikit:config>
+    <flow name="mainflow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/ods/*" doc:name="HTTP"/>
+        <apikit:router config-ref="Router" doc:name="APIkit Router"/>
+    </flow>
+    <flow name="accountflow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/ods/accounts" doc:name="HTTP"/>
+        <set-payload value="#[&quot;This is an Account!&quot;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="contactflow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/ods/contacts" doc:name="HTTP"/>
+        <set-payload value="#[&quot;This is an Contact!&quot;]" doc:name="Set Payload"/>
+    </flow>
+</mule>
